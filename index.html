@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workforce Attendance System</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#070E17;font-family:'IBM Plex Sans',sans-serif;color:#E8EDF3;height:100vh;display:flex;overflow:hidden}
+    ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:#0A1520}::-webkit-scrollbar-thumb{background:#1A2E42;border-radius:3px}
+    #sb{width:220px;background:#0D1B2A;border-right:1px solid #1A2E42;display:flex;flex-direction:column;flex-shrink:0}
+    .logo{padding:22px 20px 18px;border-bottom:1px solid #1A2E42}
+    .lt{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#00B4D8;letter-spacing:.08em;text-transform:uppercase}
+    .ls{font-size:10px;color:#4A6070;margin-top:3px;letter-spacing:.1em}
+    nav{flex:1;padding:14px 0}
+    .ni{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;font-size:13px;color:#6A8090;border-left:2px solid transparent;transition:all .15s}
+    .ni:hover{color:#C0CDD8;background:#ffffff08}
+    .ni.on{color:#00B4D8;font-weight:600;background:#00B4D810;border-left-color:#00B4D8}
+    .abox{padding:14px 20px;border-top:1px solid #1A2E42;display:flex;align-items:center;gap:10px}
+    .aav{width:30px;height:30px;border-radius:50%;background:#00B4D820;border:1px solid #00B4D840;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#00B4D8}
+    #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #tb{background:#0D1B2A;border-bottom:1px solid #1A2E42;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    #pt{font-size:16px;font-weight:600}
+    #ct{flex:1;overflow:auto;padding:24px 28px}
+    .card{background:#0D1B2A;border:1px solid #1A2E42;border-radius:10px;padding:20px 24px;margin-bottom:16px}
+    .st{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#4A6070;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+    .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .sc{border-radius:10px;padding:18px 22px;position:relative;overflow:hidden}
+    .bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+    table{width:100%;border-collapse:collapse}
+    th{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#4A6070;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #1A2E42}
+    td{padding:12px 14px;font-size:13px;color:#C0CDD8;border-bottom:1px solid #111E2A}
+    tr:hover td{background:#0A1520}
+    .ox{overflow-x:auto}
+    .av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;flex-shrink:0}
+    .sb2{display:flex;align-items:center;gap:8px;background:#0A1520;border:1px solid #1A2E42;border-radius:7px;padding:8px 14px}
+    .sb2 input{background:transparent;border:none;outline:none;color:#C0CDD8;font-size:13px;font-family:'IBM Plex Sans',sans-serif;width:180px}
+    select{background:#0A1520;border:1px solid #1A2E42;border-radius:7px;padding:9px 12px;color:#C0CDD8;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none}
+    select option{background:#0D1B2A}
+    .btn{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'IBM Plex Sans',sans-serif}
+    .bp{background:#00B4D8;color:#fff}.bg2{background:#1A2E42;color:#8A9BB0}.bsm{padding:4px 10px;font-size:11px}
+    .modal{position:fixed;inset:0;background:#00000090;display:flex;align-items:center;justify-content:center;z-index:100}
+    .mb{background:#0D1B2A;border:1px solid #1A2E42;border-radius:14px;padding:28px;width:90%;max-width:540px;max-height:85vh;overflow:auto}
+    .mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .xb{background:none;border:none;cursor:pointer;color:#4A6070;font-size:20px}
+    label{font-size:11px;color:#4A6070;margin-bottom:6px;display:block;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase}
+    .fi{width:100%;background:#0A1520;border:1px solid #1A2E42;border-radius:7px;padding:9px 12px;color:#C0CDD8;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none}
+    textarea.fi{height:80px;resize:vertical}
+    .fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .c2{grid-column:1/-1}
+    .dw{display:flex;align-items:center;gap:20px}
+    .bc{display:flex;align-items:flex-end;gap:8px;height:110px;padding-top:8px}
+    .bco{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
+    .bf{width:100%;border-radius:4px 4px 0 0;min-height:4px}
+    .bl{font-size:9px;color:#4A6070;font-family:'IBM Plex Mono',monospace;text-align:center}
+    .bp2{font-size:10px;font-family:'IBM Plex Mono',monospace;font-weight:600}
+    .ac{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px;font-weight:700}
+    .pw{display:flex;align-items:center;gap:8px}
+    .pt2{flex:1;height:6px;background:#1A2E42;border-radius:3px}
+    .pf{height:100%;border-radius:3px}
+    .pp{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:36px}
+    .tc{display:flex;flex-wrap:wrap;gap:8px}
+    .tci{display:flex;align-items:center;gap:10px;background:#0A1520;border:1px solid #1A2E42;border-radius:8px;padding:10px 14px}
+    .mg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+    .ms{background:#0A1520;border:1px solid #1A2E42;border-radius:8px;padding:14px 16px}
+    .li{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+  </style>
+</head>
+<body>
+<div id="sb">
+  <div class="logo"><div class="lt">WORKFORCE</div><div class="ls">ATTENDANCE SYSTEM</div></div>
+  <nav>
+    <div class="ni on" onclick="go('dashboard')"><span>📊</span>Dashboard</div>
+    <div class="ni" onclick="go('employees')"><span>👥</span>Employees</div>
+    <div class="ni" onclick="go('attendance')"><span>📅</span>Attendance</div>
+    <div class="ni" onclick="go('leave')"><span>🌴</span>Leave Credits</div>
+    <div class="ni" onclick="go('reports')"><span>📈</span>Reports</div>
+  </nav>
+  <div class="abox"><div class="aav">A</div><div><div style="font-size:12px;font-weight:500;color:#C0CDD8">Admin</div><div style="font-size:10px;color:#4A6070">HR Administrator</div></div></div>
+</div>
+<div id="main">
+  <div id="tb"><div id="pt">Dashboard</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4A6070">TUE, MAY 6 · 2025</div></div>
+  <div id="ct"></div>
+</div>
+<script>
+const DC={HR:"#00B4D8",Engineering:"#9B8EFF",Sales:"#00C897",Operations:"#FFB347",Finance:"#FF8FA3"};
+const SM={P:{l:"Present",c:"#00C897",b:"#00C89718"},L:{l:"On Leave",c:"#00B4D8",b:"#00B4D818"},A:{l:"Absent",c:"#FF5C6C",b:"#FF5C6C18"},WFH:{l:"WFH",c:"#9B8EFF",b:"#9B8EFF18"},S:{l:"Sick",c:"#FFB347",b:"#FFB34718"}};
+const EMP=[
+  {id:"EMP-001",name:"Maria Santos",dept:"HR",pos:"HR Manager",status:"Active",av:"MS"},
+  {id:"EMP-002",name:"Jose Reyes",dept:"Engineering",pos:"Software Engineer",status:"Active",av:"JR"},
+  {id:"EMP-003",name:"Ana Cruz",dept:"Sales",pos:"Sales Associate",status:"Active",av:"AC"},
+  {id:"EMP-004",name:"Mark Lim",dept:"Operations",pos:"Operations Lead",status:"Active",av:"ML"},
+  {id:"EMP-005",name:"Clara Reyes",dept:"Finance",pos:"Finance Analyst",status:"Active",av:"CR"},
+  {id:"EMP-006",name:"Diego Mendoza",dept:"Engineering",pos:"Frontend Developer",status:"Active",av:"DM"},
+  {id:"EMP-007",name:"Sofia Aquino",dept:"Sales",pos:"Sales Manager",status:"Active",av:"SA"},
+  {id:"EMP-008",name:"Rafael Torres",dept:"Operations",pos:"Logistics Officer",status:"Inactive",av:"RT"},
+  {id:"EMP-009",name:"Lia Villanueva",dept:"HR",pos:"HR Associate",status:"Active",av:"LV"},
+  {id:"EMP-010",name:"Carlos Bautista",dept:"Engineering",pos:"Backend Engineer",status:"Active",av:"CB"}
+];
+const WD=[];
+for(let d=1;d<=31;d++){const w=new Date(2025,4,d).getDay();if(w!==0&&w!==6)WD.push(d);}
+const AT={};
+EMP.forEach(e=>{
+  AT[e.id]={};
+  const wts=[.72,.08,.05,.10,.05],st=["P","L","A","WFH","S"];
+  WD.forEach(d=>{let r=Math.random(),a=0;for(let i=0;i<wts.length;i++){a+=wts[i];if(r<a){AT[e.id][d]=st[i];break;}}if(!AT[e.id][d])AT[e.id][d]="P";});
+  AT[e.id][6]=e.status==="Inactive"?"A":e.id==="EMP-003"||e.id==="EMP-007"?"L":e.id==="EMP-005"?"S":e.id==="EMP-008"?"A":"P";
+});
+const LC={};
+EMP.forEach(e=>{const v=Math.floor(Math.random()*8),s=Math.floor(Math.random()*4),el=Math.floor(Math.random()*2);LC[e.id]={VL:{t:15,u:v,r:15-v},SL:{t:10,u:s,r:10-s},EL:{t:3,u:el,r:3-el}};});
+const LH={"EMP-001":[{type:"VL",from:"May 1",to:"May 2",days:2,reason:"Family vacation",status:"Approved"},{type:"SL",from:"Apr 10",to:"Apr 10",days:1,reason:"Fever",status:"Approved"}],"EMP-002":[{type:"VL",from:"Apr 21",to:"Apr 25",days:5,reason:"Planned leave",status:"Approved"}],"EMP-003":[{type:"VL",from:"May 6",to:"May 8",days:3,reason:"Personal matters",status:"Approved"}],"EMP-004":[{type:"SL",from:"Apr 3",to:"Apr 4",days:2,reason:"Medical check-up",status:"Approved"}],"EMP-005":[{type:"SL",from:"May 6",to:"May 7",days:2,reason:"Flu",status:"Approved"}],"EMP-006":[],"EMP-007":[{type:"VL",from:"May 6",to:"May 9",days:4,reason:"Vacation",status:"Approved"}],"EMP-008":[{type:"UL",from:"May 1",to:"May 6",days:4,reason:"Unauthorized",status:"Pending"}],"EMP-009":[{type:"EL",from:"Feb 20",to:"Feb 20",days:1,reason:"Bereavement",status:"Approved"}],"EMP-010":[{type:"VL",from:"Apr 14",to:"Apr 18",days:5,reason:"Holy week",status:"Approved"}]};
+
+function mkAv(e,sz){sz=sz||32;const c=DC[e.dept]||"#00B4D8";return '<div class="av" style="width:'+sz+'px;height:'+sz+'px;background:'+c+'22;border:1px solid '+c+'44;color:'+c+';font-size:'+Math.round(sz*.34)+'px">'+e.av+'</div>';}
+function mkBdg(t,c,b){return '<span class="bdg" style="color:'+c+';background:'+b+'">'+t+'</span>';}
+function mkSB(code){var m=SM[code]||SM.P;return mkBdg(m.l,m.c,m.b);}
+function mkLB(s){var m={Approved:["#00C897","#00C89718"],Pending:["#FFB347","#FFB34718"],Rejected:["#FF5C6C","#FF5C6C18"]}[s]||["#8A9BB0","#1A2E42"];return mkBdg(s,m[0],m[1]);}
+function mkDB(dept){var c=DC[dept]||"#00B4D8";return mkBdg(dept,c,c+"18");}
+function mkMn(v,c,sz){c=c||"#C0CDD8";sz=sz||16;return '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:'+sz+'px;font-weight:600;color:'+c+'">'+v+'</span>';}
+
+function mkDonut(data,sz){
+  sz=sz||130;
+  var tot=data.reduce(function(a,d){return a+d.v;},0)||1;
+  var off=0,paths="",r=45,cx=65,cy=65,circ=2*Math.PI*r;
+  data.forEach(function(d){
+    var pct=d.v/tot,dash=pct*circ,gap=circ-dash;
+    paths+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+d.color+'" stroke-width="14" stroke-dasharray="'+dash.toFixed(1)+' '+gap.toFixed(1)+'" transform="rotate('+(off*360-90)+' '+cx+' '+cy+')" />';
+    off+=pct;
+  });
+  return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 130 130">'+paths+'<circle cx="'+cx+'" cy="'+cy+'" r="32" fill="#070E17"/></svg>';
+}
+
+function dashPage(){
+  var act=EMP.filter(function(e){return e.status==="Active";});
+  var ts={};act.forEach(function(e){var s=AT[e.id][6];ts[s]=(ts[s]||0)+1;});
+  var P=ts.P||0,L=(ts.L||0)+(ts.S||0),W=ts.WFH||0,A=ts.A||0;
+  var rate=Math.round((P+W)/act.length*100);
+  var pd=[{v:P,color:"#00C897",l:"Present"},{v:L,color:"#00B4D8",l:"On Leave"},{v:W,color:"#9B8EFF",l:"WFH"},{v:A,color:"#FF5C6C",l:"Absent"}];
+  var stats=[{l:"Total Employees",v:act.length,a:"#00B4D8",s:act.length+" active"},{l:"Present Today",v:P+W,a:"#00C897",s:rate+"% rate"},{l:"On Leave / Sick",v:L,a:"#FFB347",s:"today"},{l:"Absent",v:A,a:"#FF5C6C",s:"unaccounted"}];
+  var depts=["HR","Engineering","Sales","Operations","Finance"];
+  var dr=depts.map(function(dept){
+    var em=act.filter(function(e){return e.dept===dept;});
+    var p=em.filter(function(e){var s=AT[e.id][6];return s==="P"||s==="WFH";}).length;
+    return{dept:dept,rate:em.length?Math.round(p/em.length*100):0,color:DC[dept]};
+  });
+  var ol=act.filter(function(e){return AT[e.id][6]==="L"||AT[e.id][6]==="S";});
+  var h='<div class="g4">';
+  stats.forEach(function(s){h+='<div class="sc" style="border:1px solid '+s.a+'30"><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#4A6070;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">'+s.l+'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:36px;font-weight:700;color:'+s.a+';line-height:1">'+s.v+'</div><div style="font-size:11px;color:#4A6070;margin-top:8px">'+s.s+'</div><div style="position:absolute;right:-10px;top:-10px;width:80px;height:80px;border-radius:50%;background:'+s.a+'08"></div></div>';});
+  h+='</div><div class="g2"><div class="card"><div class="st">Today\'s Breakdown</div><div class="dw"><div style="text-align:center">'+mkDonut(pd)+'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;color:#00C897;margin-top:4px">'+rate+'%</div><div style="font-size:10px;color:#4A6070">attendance rate</div></div><div style="flex:1">';
+  pd.forEach(function(d){h+='<div class="li"><div style="display:flex;align-items:center"><div style="width:8px;height:8px;border-radius:2px;background:'+d.color+';margin-right:6px"></div><span style="font-size:12px;color:#8A9BB0">'+d.l+'</span></div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;color:'+d.color+'">'+d.v+'</span></div>';});
+  h+='</div></div></div><div class="card"><div class="st">By Department</div><div class="bc">';
+  dr.forEach(function(d){h+='<div class="bco"><div class="bp2" style="color:'+d.color+'">'+d.rate+'%</div><div class="bf" style="height:'+Math.max(d.rate,3)+'%;background:'+d.color+'"></div><div class="bl">'+d.dept.substring(0,3)+'</div></div>';});
+  h+='</div></div></div><div class="card"><div class="st">On Leave / Sick Today ('+ol.length+')</div><div class="tc">';
+  if(ol.length===0){h+='<div style="color:#4A6070;font-size:13px">No employees on leave today.</div>';}
+  else{ol.forEach(function(e){h+='<div class="tci">'+mkAv(e)+'<div><div style="font-size:13px;font-weight:500;color:#C0CDD8">'+e.name+'</div><div style="font-size:11px;color:#4A6070">'+e.dept+'</div></div>'+mkSB(AT[e.id][6])+'</div>';});}
+  h+='</div></div>';
+  return h;
+}
+
+function empPage(){
+  return '<div style="display:flex;gap:12px;margin-bottom:20px"><div class="sb2"><span style="color:#4A6070">🔍</span><input type="text" id="esrch" placeholder="Search employees..." oninput="fEmp()"/></div><select id="dflt" onchange="fEmp()"><option>All</option><option>HR</option><option>Engineering</option><option>Sales</option><option>Operations</option><option>Finance</option></select></div><div class="card"><div class="ox"><table><thead><tr><th>Employee</th><th>ID</th><th>Department</th><th>Position</th><th>Status</th><th>Today</th><th></th></tr></thead><tbody id="etb">'+empRows(EMP)+'</tbody></table></div></div>';
+}
+function empRows(list){
+  return list.map(function(e){
+    return '<tr onclick="showEmp(\''+e.id+'\')" style="cursor:pointer"><td><div style="display:flex;align-items:center;gap:10px">'+mkAv(e)+'<span style="font-weight:500;color:#E8EDF3">'+e.name+'</span></div></td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:#4A6070">'+e.id+'</td><td>'+mkDB(e.dept)+'</td><td>'+e.pos+'</td><td>'+mkBdg(e.status,e.status==="Active"?"#00C897":"#FF5C6C",e.status==="Active"?"#00C89718":"#FF5C6C18")+'</td><td>'+mkSB(AT[e.id][6])+'</td><td style="color:#4A6070">›</td></tr>';
+  }).join("");
+}
+function fEmp(){
+  var q=document.getElementById("esrch").value.toLowerCase();
+  var d=document.getElementById("dflt").value;
+  var f=EMP.filter(function(e){return(e.name.toLowerCase().indexOf(q)>=0||e.id.toLowerCase().indexOf(q)>=0)&&(d==="All"||e.dept===d);});
+  document.getElementById("etb").innerHTML=empRows(f);
+}
+
+function attPage(){
+  var opts='<option value="All">All Employees</option>'+EMP.map(function(e){return '<option value="'+e.id+'">'+e.name+'</option>';}).join("");
+  var legend=Object.keys(SM).map(function(k){var m=SM[k];return '<div style="display:flex;align-items:center;gap:5px;margin-right:10px"><div style="width:10px;height:10px;border-radius:2px;background:'+m.c+'"></div><span style="font-size:11px;color:#4A6070">'+m.l+'</span></div>';}).join("");
+  return '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap"><select id="aemp" onchange="renderAtt()">'+opts+'</select><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4A6070">MAY 2025</span></div><div style="display:flex;flex-wrap:wrap;margin-bottom:14px">'+legend+'</div><div class="card"><div class="ox"><div id="agrid"></div></div></div>';
+}
+function renderAtt(){
+  var sel=document.getElementById("aemp");if(!sel)return;
+  var sid=sel.value;
+  var emps=sid==="All"?EMP:EMP.filter(function(e){return e.id===sid;});
+  var h='<table style="min-width:900px"><thead><tr><th style="min-width:160px">Employee</th>';
+  WD.forEach(function(d){h+='<th style="text-align:center;padding:10px 4px;min-width:32px;color:'+(d===6?"#00B4D8":"#4A6070")+'">'+d+'</th>';});
+  h+='</tr></thead><tbody>';
+  emps.forEach(function(e){
+    h+='<tr><td><div style="display:flex;align-items:center;gap:8px">'+mkAv(e,26)+'<div><div style="font-size:12px;font-weight:500;color:#C0CDD8">'+e.name+'</div><div style="font-size:10px;color:#4A6070">'+e.dept+'</div></div></div></td>';
+    WD.forEach(function(d){
+      var code=AT[e.id][d],m=SM[code],lbl=code==="WFH"?"⌂":code==="S"?"+":code;
+      h+='<td style="text-align:center;padding:6px 2px;background:'+(d===6?"#00B4D808":"transparent")+'"><div class="ac" style="background:'+m.b+';color:'+m.c+'">'+lbl+'</div></td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  var el=document.getElementById("agrid");if(el)el.innerHTML=h;
+}
+
+function leavePage(){
+  var act=EMP.filter(function(e){return e.status==="Active";});
+  var rows=act.map(function(e){
+    var c=LC[e.id];
+    return '<tr><td><div style="display:flex;align-items:center;gap:10px">'+mkAv(e)+'<div><div style="font-size:13px;font-weight:500;color:#E8EDF3">'+e.name+'</div><div style="font-size:11px;color:#4A6070">'+e.dept+'</div></div></div></td><td style="text-align:center">'+mkMn(c.VL.t,"#8A9BB0")+'</td><td style="text-align:center">'+mkMn(c.VL.u,"#FF5C6C")+'</td><td style="text-align:center">'+mkMn(c.VL.r,"#00C897")+'</td><td style="text-align:center">'+mkMn(c.SL.r,"#FFB347")+'</td><td style="text-align:center">'+mkMn(c.EL.r,"#9B8EFF")+'</td><td><button class="btn bg2 bsm" onclick="showLH(\''+e.id+'\')">View ('+(LH[e.id]||[]).length+')</button></td></tr>';
+  }).join("");
+  return '<div style="display:flex;justify-content:flex-end;margin-bottom:20px"><button class="btn bp" onclick="showFL()">+ File a Leave</button></div><div class="card"><div class="st">Leave Balance — All Employees</div><div class="ox"><table><thead><tr><th>Employee</th><th style="text-align:center">VL Total</th><th style="text-align:center">VL Used</th><th style="text-align:center">VL Left</th><th style="text-align:center">SL Left</th><th style="text-align:center">EL Left</th><th>History</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+}
+
+function rptPage(){
+  var rows=EMP.map(function(e){
+    var days=WD.map(function(d){return AT[e.id][d];});
+    function cnt(c){return days.filter(function(d){return d===c;}).length;}
+    var p=cnt("P"),w=cnt("WFH"),l=cnt("L"),s=cnt("S"),a=cnt("A");
+    var rate=Math.round((p+w)/WD.length*100);
+    var bc=rate>=90?"#00C897":rate>=75?"#FFB347":"#FF5C6C";
+    return '<tr><td><div style="display:flex;align-items:center;gap:9px">'+mkAv(e,28)+'<span style="font-size:13px;font-weight:500;color:#E8EDF3">'+e.name+'</span></div></td><td>'+mkDB(e.dept)+'</td><td style="text-align:center">'+mkMn(p,"#00C897",15)+'</td><td style="text-align:center">'+mkMn(w,"#9B8EFF",15)+'</td><td style="text-align:center">'+mkMn(l,"#00B4D8",15)+'</td><td style="text-align:center">'+mkMn(s,"#FFB347",15)+'</td><td style="text-align:center">'+mkMn(a,"#FF5C6C",15)+'</td><td style="min-width:140px"><div class="pw"><div class="pt2"><div class="pf" style="width:'+rate+'%;background:'+bc+'"></div></div><div class="pp" style="color:'+bc+'">'+rate+'%</div></div></td></tr>';
+  }).join("");
+  return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4A6070">MONTHLY SUMMARY — MAY 2025</div><button class="btn bg2">⬇ Export CSV</button></div><div class="card"><div class="ox"><table><thead><tr><th>Employee</th><th>Dept</th><th style="text-align:center;color:#00C897">Present</th><th style="text-align:center;color:#9B8EFF">WFH</th><th style="text-align:center;color:#00B4D8">Leave</th><th style="text-align:center;color:#FFB347">Sick</th><th style="text-align:center;color:#FF5C6C">Absent</th><th style="text-align:center">Attendance %</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+}
+
+function showEmp(id){
+  var e=EMP.find(function(x){return x.id===id;});
+  var c=LC[e.id],h=LH[e.id]||[];
+  var days=WD.map(function(d){return AT[e.id][d];});
+  var pres=days.filter(function(d){return d==="P"||d==="WFH";}).length;
+  var rate=Math.round(pres/WD.length*100),rc=rate>=90?"#00C897":"#FFB347";
+  var hr=h.length===0?'<tr><td colspan="6" style="color:#4A6070;text-align:center;padding:16px">No leave history</td></tr>':h.map(function(l){return '<tr><td>'+mkBdg(l.type,"#00B4D8","#00B4D818")+'</td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">'+l.from+'</td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">'+l.to+'</td><td style="font-family:\'IBM Plex Mono\',monospace;font-weight:600">'+l.days+'</td><td style="font-size:12px">'+l.reason+'</td><td>'+mkLB(l.status)+'</td></tr>';}).join("");
+  mkModal('<div class="mh"><div style="display:flex;align-items:center;gap:14px">'+mkAv(e,48)+'<div><div style="font-weight:700;font-size:18px;color:#E8EDF3">'+e.name+'</div><div style="font-size:12px;color:#4A6070">'+e.pos+' · '+e.dept+'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4A6070;margin-top:2px">'+e.id+'</div></div></div><button class="xb" onclick="closeM()">✕</button></div><div class="mg"><div class="ms"><div class="mslabel" style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#4A6070;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Attendance Rate</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:24px;font-weight:700;color:'+rc+'">'+rate+'%</div></div><div class="ms"><div class="mslabel" style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#4A6070;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">VL Remaining</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:24px;font-weight:700;color:#00B4D8">'+c.VL.r+'</div></div><div class="ms"><div class="mslabel" style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#4A6070;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">SL Remaining</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:24px;font-weight:700;color:#FFB347">'+c.SL.r+'</div></div></div><div class="st">Leave History</div><div class="ox"><table><thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th></tr></thead><tbody>'+hr+'</tbody></table></div>');
+}
+function showLH(id){
+  var e=EMP.find(function(x){return x.id===id;});
+  var h=LH[id]||[];
+  var hr=h.length===0?'<tr><td colspan="6" style="color:#4A6070;text-align:center;padding:16px">No leave history</td></tr>':h.map(function(l){return '<tr><td>'+mkBdg(l.type,"#00B4D8","#00B4D818")+'</td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">'+l.from+'</td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">'+l.to+'</td><td style="font-family:\'IBM Plex Mono\',monospace;font-weight:600">'+l.days+'</td><td style="font-size:12px">'+l.reason+'</td><td>'+mkLB(l.status)+'</td></tr>';}).join("");
+  mkModal('<div class="mh"><div style="display:flex;align-items:center;gap:12px">'+mkAv(e,36)+'<div><div style="font-weight:600;color:#E8EDF3">'+e.name+'</div><div style="font-size:11px;color:#4A6070">Leave History</div></div></div><button class="xb" onclick="closeM()">✕</button></div><div class="ox"><table><thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th></tr></thead><tbody>'+hr+'</tbody></table></div>');
+}
+function showFL(){
+  var opts=EMP.filter(function(e){return e.status==="Active";}).map(function(e){return '<option value="'+e.id+'">'+e.name+' — '+e.dept+'</option>';}).join("");
+  mkModal('<div class="mh"><div style="font-weight:600;font-size:16px;color:#E8EDF3">File a Leave Request</div><button class="xb" onclick="closeM()">✕</button></div><div class="fg"><div class="c2"><label>Employee</label><select class="fi"><option value="">Select employee...</option>'+opts+'</select></div><div><label>Leave Type</label><select class="fi"><option value="VL">Vacation Leave (VL)</option><option value="SL">Sick Leave (SL)</option><option value="EL">Emergency Leave (EL)</option><option value="UL">Unpaid Leave (UL)</option></select></div><div></div><div><label>Date From</label><input type="date" class="fi"/></div><div><label>Date To</label><input type="date" class="fi"/></div><div class="c2"><label>Reason</label><textarea class="fi" placeholder="Enter reason for leave..."></textarea></div></div><div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px"><button class="btn bg2" onclick="closeM()">Cancel</button><button class="btn bp" onclick="alert(\'Leave submitted! (Demo mode)\');closeM()">Submit Request</button></div>');
+}
+function mkModal(html){
+  var d=document.createElement("div");
+  d.className="modal";d.id="moverlay";
+  d.onclick=function(e){if(e.target===d)closeM();};
+  d.innerHTML='<div class="mb">'+html+'</div>';
+  document.body.appendChild(d);
+}
+function closeM(){var m=document.getElementById("moverlay");if(m)m.remove();}
+
+var TITLES={dashboard:"Dashboard",employees:"Employee Directory",attendance:"Attendance Tracker",leave:"Leave Credits",reports:"Reports"};
+function go(tab){
+  document.querySelectorAll(".ni").forEach(function(el){el.classList.toggle("on",el.getAttribute("onclick")==="go('"+tab+"')");});
+  document.getElementById("pt").textContent=TITLES[tab];
+  var pages={dashboard:dashPage,employees:empPage,attendance:attPage,leave:leavePage,reports:rptPage};
+  document.getElementById("ct").innerHTML=pages[tab]?pages[tab]():"";
+  if(tab==="attendance")setTimeout(renderAtt,0);
+}
+go("dashboard");
+</script>
+</body>
+</html>
